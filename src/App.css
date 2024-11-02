@@ -1,38 +1,329 @@
-.App {
-  text-align: center;
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+  margin: 0;
+  padding: 20px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+
+.main-section{
+
+  display: flex;
+  justify-content: space-between;
+  
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+
+.container {
+ 
+  padding: 20px;
+ background-color: rgba(0, 0, 0, 0);
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0);
+  width: 40%;
+  min-width: 300px;
+}
+
+
+
+
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
   }
 }
 
-.App-header {
+
+.app-header {
   background-color: #282c34;
-  min-height: 100vh;
+  padding: 20px;
+  color: white;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+.notification-bar {
+  background-color: #ffcc00; /* Green background */
+  color: #333;
+  padding: 16px;
+  display: flex;
+  
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 4px;
+  position: relative;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+
+  animation: slideIn 1s;
+}
+
+.notification-bar p {
+  margin: 0; /* Remove default margin */
+  flex-grow: 1; /* Allow text to take available space */
+font-weight: 600;
+}
+
+.notification-actions {
+  display: flex;
+  align-items: center;
+}
+
+.view-draft-btn {
+  background-color: #333; /* White background for the button */
+  color: #ffcc00; /* Match the text color with the bar */
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  margin-right: 16px; /* Space between button and close icon */
+  cursor: pointer;
+  font-weight: bolder;
+  transition: background-color 0.3s;
+}
+
+.view-draft-btn:hover {
+  background-color: #333333d8;
+
+}
+
+.close-icon {
+  cursor: pointer;
+  font-size: 24px; /* Size for the close icon */
+  padding: 0 8px; /* Padding for better click area */
+}
+
+.close-icon:hover {
+  color: #333333d8;
+  transform: scale(1.1);
+  transition: transform 1s; /* Change color on hover for better UX */
+}
+/* AddTask.css */
+
+/* Container styling for the form */
+.add-task-form {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  margin-top: 15px;
+
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Input and Textarea Styling */
+.add-task-form input[type="text"],
+.add-task-form textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.add-task-form input[type="text"]:focus,
+.add-task-form textarea:focus {
+  border-color: #4CAF50;
+}
+
+/* Button Styling */
+.add-task-form button {
+  padding: 10px 15px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease;
+}
+
+.add-task-form button:hover {
+  background-color: #45a049;
+}
+
+/* Placeholder styling */
+.add-task-form input[type="text"]::placeholder,
+.add-task-form textarea::placeholder {
+  color: #aaa;
+}
+
+
+/* Tasks.css */
+.task-list {
+  margin: 20px 0;
+  
+  min-height: 300px;
+
+}
+
+.task-item {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.3s;
+}
+
+.task-item.completed span {
+  text-decoration: line-through;
+  color: #888;
+}
+
+.task-actions button {
+  margin-left: 10px;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.task-actions button:first-child {
+  background-color: #4CAF50;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.task-actions button:last-child {
+  background-color: #f44336;
+  color: white;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+
+
+.task-list {
+  background-color: #f9f9f9; /* Light background for the list */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+}
+
+.task-list p {
+  color: #666;
+  text-align: center;
+}
+
+/* Task Item */
+.task-item {
+  background-color: #ffffff;
+  padding: 12px 16px;
+  margin: 8px 0;
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s;
+}
+
+/* Completed Task Item */
+.task-item.completed {
+  background-color: #e6ffe6; /* Light green background for completed tasks */
+  color: #4caf50; /* Green color for text */
+  text-decoration: line-through;
+}
+
+/* Task Actions */
+.task-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.task-actions button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+/* Complete Button */
+.task-actions button:first-child {
+  background-color: #4caf50;
+  color: #fff;
+}
+
+.task-actions button:first-child:hover {
+  background-color: #43a047;
+}
+
+/* Delete Button */
+.task-actions button:last-child {
+  background-color: #e57373;
+  color: #fff;
+}
+
+.task-actions button:last-child:hover {
+  background-color: #d32f2f;
+}
+
+
+
+
+
+
+.projects-sidebar {
+  min-width: 300px;
+  background-color: #f8f8f8;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  width: 25%;
+
+}
+
+/* Sidebar Header */
+.projects-sidebar h2 {
+  margin: 0 0 15px;
+  font-size: 1.5rem;
+  color: #333;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 10px;
+}
+
+/* Project List Styles */
+.project-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.project-item {
+  padding: 12px 15px;
+  margin-bottom: 8px;
+  background-color: #ffffff;
+  color: #333;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 5px;
+  transition: background-color 0.3s, transform 0.1s;
+  cursor: pointer;
+}
+
+.project-item:hover {
+  background-color: #e8e8e8;
+  transform: translateX(2px);
+}
+
+.project-item.selected {
+  background-color: #4CAF50;
+  color: #ffffff;
 }
