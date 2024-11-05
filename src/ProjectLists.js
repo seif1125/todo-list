@@ -1,5 +1,6 @@
 import React from 'react';
-
+import ProjectItem from './ProjectItem';
+import AddProjectForm from './AddProjectForm';
 
 export default function ProjectsSidebar  ({ projects, onProjectSelect, selectedProject })  {
   return (
@@ -8,16 +9,19 @@ export default function ProjectsSidebar  ({ projects, onProjectSelect, selectedP
       
       <ul className="project-list">
         {projects.map((project) => (
-          <li
-            key={project.id}
-            className={`project-item ${selectedProject.id === project.id ? 'selected' : ''}`}
-            onClick={()=>onProjectSelect(project.id)}
-          >
-            {project.name}
-          </li>
+          <ProjectItem
+          key={project.id}
+          project={project}
+          isSelected={selectedProject?.id === project.id}
+          onSelect={onProjectSelect}
+          onEdit={()=>{}} //handleEditProject}
+          onDelete={()=>{}} //handleDeleteProject}
+        />
         ))}
       </ul>
 
+     <AddProjectForm onAddProject={()=>{}} />   {/*onAddProject */}
+    
     
     </div>
   );
