@@ -1,15 +1,14 @@
 
 
-export default function NotificationBar({ message, isVisible }) {
+export default function NotificationBar({ isVisible ,openDraftSideBar}) {
     return (
-        isVisible && (
+     
             <div className="notification-bar">
-                <p>{message}</p>
+               {isVisible ? (   <p>You have drafted messages!</p> ):(<p>You have no drafted messages!</p>)}
                 <div className="notification-actions">
-                    <button className="view-draft-btn">View Draft</button>
-                    <span className="close-icon" >&times;</span>
+                    <button onClick={openDraftSideBar} className="view-draft-btn">View Draft</button>
                 </div>
             </div>
-        )
+       
     );
 }
