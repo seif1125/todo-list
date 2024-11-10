@@ -18,12 +18,12 @@ const TaskItem = ({ task, onComplete, onDelete,onEdit }) => {
           <button className='task-item-toggle-description' onClick={toggleDescription}>
           {showDescription ? 'Hide Details' : 'Show Details'}
         </button>
-        <div>
+        <div className='complete-toggle'>
             <span>Is Complete?</span>
             <input type='checkbox'  onChange={onComplete} checked={task.completed } />
           </div>
 
-          <button onClick={onEdit} className="edit-button" aria-label="Edit Task">
+          <button onClick={onEdit} className="edit-task-button" aria-label="Edit Task">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -36,12 +36,12 @@ const TaskItem = ({ task, onComplete, onDelete,onEdit }) => {
           </svg>
         </button>
           
-         <button onClick={onDelete} className="delete-button" aria-label="Delete Task">
+         <button onClick={onDelete} className="delete-task-button" aria-label="Delete Task">
          <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
             height="16"
-            fill="#000000"
+            fill="currentColor"
             viewBox="0 0 16 16"
           >
             <path d="M5.5 5.5a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0v-6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 1 1 0v6a.5.5 0 0 1-1 0v-6zM7 4.5V4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v.5h3a.5.5 0 0 1 0 1h-1v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-9H2a.5.5 0 0 1 0-1h3zM4.118 5 4 5.059V14a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V5.059L11.882 5H4.118zM5 4.5v-.5h6V4.5H5z" />
