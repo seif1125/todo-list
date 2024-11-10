@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 
 const ProjectItem = ({ project, isSelected, onSelect, onEdit, onDelete }) => {
-  // State for toggling description visibility
-  const [isExpanded, setIsExpanded] = useState(false);
+
 
   const handleClick = (e) => {
     e.stopPropagation();
     onSelect(project.id);
-    setIsExpanded((prev) => !prev);
+   
   };
 
   return (
@@ -26,7 +25,7 @@ const ProjectItem = ({ project, isSelected, onSelect, onEdit, onDelete }) => {
            <span className='tasks-count'>{project?.tasks?.length ?? '--'} task(s)</span>
           <div>
            
-            <span className={`arrow-icon ${isExpanded ? 'open' : ''}`}>
+            <span className={`arrow-icon ${isSelected? 'opened-project' : ''}`}>
               ▼
             </span>
           </div>
@@ -34,7 +33,7 @@ const ProjectItem = ({ project, isSelected, onSelect, onEdit, onDelete }) => {
       </div>
 
       {/* Conditionally show the description */}
-      {isExpanded && (
+      {isSelected && (
         <div className="project-description">
           <p>{project.description || 'No description available'}</p>
         </div>
