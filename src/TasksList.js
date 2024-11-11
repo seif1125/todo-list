@@ -4,7 +4,7 @@ import TaskItem from './TaskItem';
 const TaskList = ({ tasks, onComplete, onDelete }) => {
   return (
     <div className="task-list">
-      {tasks.length > 0 ? (
+      {tasks?.length > 0 ? (
         tasks.map((task) => (
           <TaskItem
             key={task.id}

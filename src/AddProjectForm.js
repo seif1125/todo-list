@@ -1,20 +1,24 @@
-import React,{useState} from 'react';
-const AddProjectForm = ({ onAddProject }) => {
+import React,{useState,useContext} from 'react';
+import { ProjectContext } from './App';
+const AddProjectForm = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
+   const {handleAddProject} = useContext(ProjectContext);
+
 
   
-    const handleAddProject = (e) => {
+    const addProject = (e) => {
       e.preventDefault();
       if (title.trim()) {
-        onAddProject({ title, description });
+        const newProject= { id: Date.now(), name: title ,description:description,tasks:[]};
+        handleAddProject(newProject);
         setTitle('');
         setDescription('');
       }
     };
   
     return (
-      <form className="add-project-form" onSubmit={handleAddProject}>
+      <form className="add-project-form" onSubmit={addProject}>
         <h3>Add New Project</h3>
         <input
           type="text"

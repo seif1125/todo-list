@@ -6,12 +6,7 @@ import TaskList from "./TasksList"
 export default function TasksContainer ({selectedProject}){
 
   
-      const addTask = (title) => {
-        // setTasks([
-        //   ...tasks,
-        //   { id: Date.now(), title, completed: false }
-        // ]);
-      };
+
     
       const completeTask = (taskId) => {
         // setTasks(
@@ -28,8 +23,8 @@ export default function TasksContainer ({selectedProject}){
     return(
         
         <div className="container">
-        <TaskList  tasks={selectedProject.tasks} onComplete={completeTask} onDelete={deleteTask}   />
-        <AddTask/>
+        <TaskList  tasks={selectedProject?.tasks} onComplete={completeTask} onDelete={deleteTask}   />
+        <AddTask selectedProject={selectedProject}/>
            
 
         </div>

@@ -20,11 +20,8 @@ export default function ProjectsSidebar  ({ projects, onProjectSelect, selectedP
         ))}
       </ul>
       </div>
-      
-      
-      
 
-     <AddProjectForm onAddProject={()=>{}} />   {/*onAddProject */}
+     <AddProjectForm />  
     
     
     </div>

@@ -1,29 +1,31 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { ProjectContext } from './App';
 
-export default function AddTask({ onAddTask, onSaveDraft }) {
+export default function AddTask({selectedProject}) {
   const [taskTitle, setTaskTitle] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
+  const {handleAddTask,handleAddDraft} =useContext(ProjectContext)
 
-  const handleAddTask = (e) => {
+  const addTask = (e) => {
     e.preventDefault();
     if (taskTitle.trim()) {
-      onAddTask({ title: taskTitle, description: taskDescription });
+      handleAddTask({ id:Date.now(),title: taskTitle, description: taskDescription });
       setTaskTitle('');
       setTaskDescription('');
     }
   };
 
-  const handleSaveDraft = (e) => {
+  const addDraft = (e) => {
     e.preventDefault();
     if (taskTitle.trim()) {
-      onSaveDraft({ title: taskTitle, description: taskDescription });
+      handleAddDraft({id:Date.now(), title: taskTitle, description: taskDescription,projectId:selectedProject.id,projectName:selectedProject.name });
       setTaskTitle('');
       setTaskDescription('');
     }
   };
 
   return (
-    <form className="add-task-form" onSubmit={handleAddTask}>
+    <form className="add-task-form" onSubmit={addTask}>
       <input
         value={taskTitle}
         onChange={(e) => setTaskTitle(e.target.value)}
@@ -39,7 +41,7 @@ export default function AddTask({ onAddTask, onSaveDraft }) {
       ></textarea>
       <div className="button-group">
         <button type="submit">Add Task</button>
-        <button type="button" onClick={handleSaveDraft}>Save to Draft</button>
+        <button type="button" onClick={addDraft}>Save to Draft</button>
       </div>
     </form>
   );

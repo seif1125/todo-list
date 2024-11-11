@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 const ProjectItem = ({ project, isSelected, onSelect, onEdit, onDelete }) => {
 
@@ -16,12 +16,13 @@ const ProjectItem = ({ project, isSelected, onSelect, onEdit, onDelete }) => {
         
         <div className="project-actions">
           {/* Edit and delete icons */}
-          <span className="edit-button" onClick={(e) => { e.stopPropagation(); onEdit(project.id); }}>
+          {isSelected&&( <><span className="edit-button" onClick={(e) => { e.stopPropagation(); onEdit(project.id); }}>
             edit
           </span>
           <span className="delete-button" onClick={(e) => { e.stopPropagation(); onDelete(project.id); }}>
            delete
-          </span>
+          </span></>)}
+         
            <span className='tasks-count'>{project?.tasks?.length ?? '--'} task(s)</span>
           <div>
            
