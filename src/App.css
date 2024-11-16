@@ -379,6 +379,20 @@ span.arrow-icon {
   transform: translateX(2px);
 }
 
+.project-header > input[type="text"] {
+  background: none;
+  border: .2px solid;
+  border-radius: 5px;
+  padding: 5px 10px;
+}
+
+.project-description> textarea {
+  background: none;
+  width: -webkit-fill-available;
+  border-color: #333;
+  border-radius: 5px;
+  padding: 10px 5px;
+}
 
 form.add-project-form {
   display: flex;
