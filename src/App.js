@@ -12,7 +12,7 @@ function App() {
   // State for managing drafts, projects, and selected project
   const [drafts, setDrafts] = useState([]);
   const [projects, setProjects] = useState([]);
-  const [selectedProject, setSelectedProject] = useState(projects[0]);
+  const [selectedProject, setSelectedProject] = useState({});
   const [isDraftSidebarOpen, setIsDraftSidebarOpen] = useState(false);
 
   // Effect to load drafts from localStorage on page load
@@ -21,6 +21,7 @@ function App() {
     const savedProjects=JSON.parse(localStorage.getItem('projects')) || [];
     setDrafts(savedDrafts);
     setProjects(savedProjects)
+    if(savedProjects.length>0){setSelectedProject(savedProjects[0])}
   }, []);
 
   // Effect to save drafts to localStorage whenever drafts change
@@ -78,6 +79,121 @@ function App() {
     setSelectedProject(updatedSelectedProject);
   };
 
+  const handleEditTask = (updatedTask) => {
+    const updatedProjects = projects.map((project) =>
+      project.id === selectedProject.id
+        ? {
+            ...project,
+            tasks: project.tasks.map((task) =>
+              task.id === updatedTask.id ? { ...task, ...updatedTask } : task
+            ),
+          }
+        : project
+    );
+  
+    const updatedSelectedProject = updatedProjects.find(
+      (project) => project.id === selectedProject.id
+    );
+  
+    setProjects(updatedProjects);
+    setSelectedProject(updatedSelectedProject);
+  };
+  const handleDeleteTask= (taskId)=>{
+    
+      const updatedProjects = projects.map((project) =>
+        project.id === selectedProject.id
+          ? { ...project, tasks: project.tasks.filter((task) => task.id !== taskId) }
+          : project
+      );
+  
+      const updatedSelectedProject = updatedProjects.find(
+        (project) => project.id === selectedProject.id
+      );
+  
+      setProjects(updatedProjects);
+      setSelectedProject(updatedSelectedProject);
+    };
+
+    const handleDeleteProject = (projectId)=>{
+       const updatedProjects=projects.filter(project=>{return project.id!==projectId})
+       const updatedSelectedProject = updatedProjects.find(
+        (project) => project.id === selectedProject.id
+      );
+      setProjects(updatedProjects);
+      setSelectedProject(updatedSelectedProject);
+
+    }
+
+    const handleEditProject=(updatedProject)=>{
+      const updatedProjects=projects.map((project) =>
+      project.id === updatedProject.id ? updatedProject : project
+    )
+    const updatedSelectedProject = updatedProjects.find(
+      (project) => project.id === selectedProject.id
+    );
+    setProjects(updatedProjects);
+      setSelectedProject(updatedSelectedProject);
+    }
+
+    const handleSaveDraft = (draftId) => {
+      setProjects((prevProjects) => {
+        return drafts.reduce((updatedProjects, draft) => {
+          if (draft.id === draftId) {
+            // Check if project exists
+            const projectIndex = updatedProjects.findIndex((proj) => proj.id === draft.projectId);
+    
+            if (projectIndex !== -1) {
+              // Add draft to existing project's tasks
+              const updatedProject = {
+                ...updatedProjects[projectIndex],
+                tasks: [
+                  ...updatedProjects[projectIndex].tasks,
+                  {
+                    id: Date.now(), // Unique ID for the task
+                    title: draft.title,
+                    description: draft.description,
+                    completed: false,
+                  },
+                ],
+              };
+    
+              updatedProjects[projectIndex] = updatedProject;
+            } else {
+              // Create a new project and add the draft as the first task
+              const newProject = {
+                id: draft.projectId || Date.now(), // Use existing ID if available or generate one
+                name: draft.projectName || "Untitled Project",
+                description: "Auto-created project",
+                tasks: [
+                  {
+                    id: Date.now(), // Unique ID for the task
+                    title: draft.title,
+                    description: draft.description,
+                    completed: false,
+                  },
+                ],
+              };
+    
+              updatedProjects.push(newProject);
+            }
+          }
+    
+          return updatedProjects;
+        }, [...prevProjects]);
+      });
+    
+      // Remove the draft from the drafts list
+      setDrafts((prevDrafts) => prevDrafts.filter((draft) => draft.id !== draftId));
+    };
+    
+    const handleDeleteDraft = (draftId) => {
+      setDrafts((prevDrafts) => prevDrafts.filter((draft) => draft.id !== draftId));
+    };
+  
+
+
+
+
   return (
     <div className="App">
       <header className="app-header">
@@ -90,19 +206,21 @@ function App() {
       />
 
       <section className="main-section">
-        <ProjectContext.Provider value={{ handleAddProject, handleAddTask, handleAddDraft }}>
+        <ProjectContext.Provider value={{ handleAddProject, handleAddTask, handleAddDraft,handleEditTask,handleDeleteTask,handleEditProject,handleDeleteProject,handleSaveDraft,handleDeleteDraft}}>
           <TaskContainer selectedProject={selectedProject} />
           <ProjectsLists
             projects={projects}
             selectedProject={selectedProject}
             onProjectSelect={changeSelectedProject}
           />
-        </ProjectContext.Provider>
+        
         <DraftsSidebar
           drafts={drafts}
           isOpen={isDraftSidebarOpen}
           onClose={handleToggleDraftSidebar}
+          projects={projects}
         />
+        </ProjectContext.Provider>
       </section>
     </div>
   );

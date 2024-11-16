@@ -181,10 +181,13 @@ h1{
 
 }
 
-.task-item.completed {
-  background-color: #e6ffe6;
+.completed {
+  
   color: #FFCC00;
   text-decoration: line-through;
+  font-weight: bold;
+  font-style: italic;
+
 }
 
 .task-bar {
@@ -256,6 +259,36 @@ h1{
   padding-left: 25px;
   font-style: italic;
 }
+.task-description > textarea{
+  background-color: none;
+  padding: 5px;
+  max-height: 30px;
+}
+.task-bar>input {
+  padding: 6px 9px;
+  display: block;
+  border-radius: 5px;
+  outline: none;
+  border: 1px solid;
+}
+.task-description > textarea {
+  background: none;
+  padding: 5px;
+  max-height: 45px;
+  width: 50%;
+  margin: 8px 0px 5px 5px;
+  border-radius: 5px;
+}
+[aria-label="Save Task"] {
+  background-color: #333;
+  color: #ffcc00;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: bolder;
+}
+
 /* Project Sidebar */
 .projects-sidebar {
   min-width: 300px;
@@ -437,3 +470,6 @@ form.add-project-form {
   color: #333;
 }
 
+.flex-class{
+  display: flex;
+}
