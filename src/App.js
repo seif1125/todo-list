@@ -1,256 +1,104 @@
-import './App.css';
-import { useState, useEffect, createContext } from 'react';
-import NotificationBar from './NotificationBar';
-import TaskContainer from './TaskContainer';
-import ProjectsLists from './ProjectLists';
-import DraftsSidebar from './DraftsSideBar';
-
-// Create Contexts
-export const ProjectContext = createContext();
+import "./App.css";
+import { useState, useEffect } from "react";
+import NotificationBar from "./components/NotificationBar";
+import TaskContainer from "./components/TaskContainer";
+import ProjectsLists from "./components/ProjectLists";
+import DraftsSidebar from './components/DraftsSideBar';
+import { ProjectContext } from "./contexts/ProjectContext";
+import { useLocalStorage } from "./hooks/useLocalStorage";
+import { useProjectManager } from "./hooks/useProjectManager";
+import { useDebounce } from "./hooks/useDebounce";
 
 function App() {
-  // State for managing drafts, projects, and selected project
-  const [drafts, setDrafts] = useState([]);
-  const [projects, setProjects] = useState([]);
-  const [selectedProject, setSelectedProject] = useState({});
+  const [drafts, setDrafts] = useLocalStorage("drafts", []);
+  const [projects, setProjects] = useLocalStorage("projects", []);
+  const [selectedProject, setSelectedProject] = useState(null);
   const [isDraftSidebarOpen, setIsDraftSidebarOpen] = useState(false);
 
-  // Effect to load drafts from localStorage on page load
-  useEffect(() => {
-    const savedDrafts = JSON.parse(localStorage.getItem('drafts')) || [];
-    const savedProjects=JSON.parse(localStorage.getItem('projects')) || [];
-    setDrafts(savedDrafts);
-    setProjects(savedProjects)
-    if(savedProjects.length>0){setSelectedProject(savedProjects[0])}
-  }, []);
+  const debouncedDrafts = useDebounce(drafts, 500);
+  const debouncedProjects = useDebounce(projects, 500);
 
-  // Effect to save drafts to localStorage whenever drafts change
   useEffect(() => {
-    if (drafts.length > 0) {
-      localStorage.setItem('drafts', JSON.stringify(drafts));
+    if (projects.length > 0 && !selectedProject) {
+      setSelectedProject(projects[0]);
     }
-  }, [drafts]);
-
-  // Effect to save projects to drafts on page reload
-  useEffect(() => {
-    const saveProjectsToDrafts = () => {
-      localStorage.setItem('projects', JSON.stringify(projects));
-    };
-    window.addEventListener('beforeunload', saveProjectsToDrafts);
-    return () => {
-      window.removeEventListener('beforeunload', saveProjectsToDrafts);
-    };
   }, [projects]);
 
-  // Function to change selected project
-  const changeSelectedProject = (selectedId) => {
-    const newSelectedProject = projects.find(project => project.id === selectedId);
-    setSelectedProject(newSelectedProject);
-  };
+  useEffect(() => {
+    localStorage.setItem("drafts", JSON.stringify(debouncedDrafts));
+  }, [debouncedDrafts]);
 
-  // Function to toggle drafts sidebar visibility
-  const handleToggleDraftSidebar = () => {
-    setIsDraftSidebarOpen((prev) => !prev);
-  };
+  useEffect(() => {
+    localStorage.setItem("projects", JSON.stringify(debouncedProjects));
+  }, [debouncedProjects]);
 
-  // Function to handle adding drafts
-  const handleAddDraft = (draft) => {
-    setDrafts((prev) => [...prev, draft]);
-  };
-
-  // Function to handle adding a new project
-  const handleAddProject = (newProject) => {
-    setProjects((prev) => [...prev, newProject]);
-  };
-
-  // Function to handle adding a new task to a selected project
-  const handleAddTask = (newTask) => {
-    const updatedProjects = projects.map((project) =>
-      project.id === selectedProject.id
-        ? { ...project, tasks: [...project.tasks, newTask] }
-        : project
-    );
-
-    const updatedSelectedProject = updatedProjects.find(
-      (project) => project.id === selectedProject.id
-    );
-
-    setProjects(updatedProjects);
-    setSelectedProject(updatedSelectedProject);
-  };
-
-  const handleEditTask = (updatedTask) => {
-    const updatedProjects = projects.map((project) =>
-      project.id === selectedProject.id
-        ? {
-            ...project,
-            tasks: project.tasks.map((task) =>
-              task.id === updatedTask.id ? { ...task, ...updatedTask } : task
-            ),
-          }
-        : project
-    );
-  
-    const updatedSelectedProject = updatedProjects.find(
-      (project) => project.id === selectedProject.id
-    );
-  
-    setProjects(updatedProjects);
-    setSelectedProject(updatedSelectedProject);
-  };
-  const handleDeleteTask= (taskId)=>{
-    
-      const updatedProjects = projects.map((project) =>
-        project.id === selectedProject.id
-          ? { ...project, tasks: project.tasks.filter((task) => task.id !== taskId) }
-          : project
-      );
-  
-      const updatedSelectedProject = updatedProjects.find(
-        (project) => project.id === selectedProject.id
-      );
-  
-      setProjects(updatedProjects);
-      setSelectedProject(updatedSelectedProject);
+  useEffect(() => {
+    const saveProjectsOnUnload = () => {
+      localStorage.setItem("projects", JSON.stringify(projects));
     };
+    window.addEventListener("beforeunload", saveProjectsOnUnload);
+    return () => window.removeEventListener("beforeunload", saveProjectsOnUnload);
+  }, [projects]);
 
-    const handleDeleteProject = (projectId)=>{
-       const updatedProjects=projects.filter(project=>{return project.id!==projectId})
-       const updatedSelectedProject = updatedProjects.find(
-        (project) => project.id === selectedProject.id
-      );
-      setProjects(updatedProjects);
-      setSelectedProject(updatedSelectedProject);
-
-    }
-
-    const handleEditProject=(updatedProject)=>{
-      const updatedProjects=projects.map((project) =>
-      project.id === updatedProject.id ? updatedProject : project
-    )
-    const updatedSelectedProject = updatedProjects.find(
-      (project) => project.id === selectedProject.id
-    );
-    setProjects(updatedProjects);
-      setSelectedProject(updatedSelectedProject);
-    }
-
-    const handleSaveDraft = (draftId) => {
-      setProjects((prevProjects) => {
-        return drafts.reduce((updatedProjects, draft) => {
-          if (draft.id === draftId) {
-            // Check if project exists
-            const projectIndex = updatedProjects.findIndex((proj) => proj.id === draft.projectId);
-    
-            if (projectIndex !== -1) {
-              // Add draft to existing project's tasks
-              const updatedProject = {
-                ...updatedProjects[projectIndex],
-                tasks: [
-                  ...updatedProjects[projectIndex].tasks,
-                  {
-                    id: Date.now(), // Unique ID for the task
-                    title: draft.title,
-                    description: draft.description,
-                    completed: false,
-                  },
-                ],
-              };
-    
-              updatedProjects[projectIndex] = updatedProject;
-            } else {
-              // Create a new project and add the draft as the first task
-              const newProject = {
-                id: draft.projectId || Date.now(), // Use existing ID if available or generate one
-                name: draft.projectName || "Untitled Project",
-                description: "Auto-created project",
-                tasks: [
-                  {
-                    id: Date.now(), // Unique ID for the task
-                    title: draft.title,
-                    description: draft.description,
-                    completed: false,
-                  },
-                ],
-              };
-    
-              updatedProjects.push(newProject);
-            }
-          }
-    
-          return updatedProjects;
-        }, [...prevProjects]);
-      });
-    
-      // Remove the draft from the drafts list
-      setDrafts((prevDrafts) => prevDrafts.filter((draft) => draft.id !== draftId));
-    };
-    
-    const handleDeleteDraft = (draftId) => {
-      setDrafts((prevDrafts) => prevDrafts.filter((draft) => draft.id !== draftId));
-    };
-  
+  const {
+    addProject,
+    editProject,
+    deleteProject,
+    addTask,
+    editTask,
+    deleteTask,
+    addDraft,
+    deleteDraft,
+    saveDraft
+  } = useProjectManager(projects, setProjects, selectedProject, setSelectedProject,drafts,setDrafts);
 
 
 
+  const toggleDraftSidebar = () => setIsDraftSidebarOpen(!isDraftSidebarOpen);
 
   return (
     <div className="App">
       <header className="app-header">
-        <h1>Welcome to TODO list</h1>
+        <h1>Welcome to TODO List</h1>
       </header>
 
       <NotificationBar
-        openDraftSideBar={handleToggleDraftSidebar}
+        openDraftSideBar={toggleDraftSidebar}
         drafts={drafts}
       />
 
       <section className="main-section">
-        <ProjectContext.Provider value={{ handleAddProject, handleAddTask, handleAddDraft,handleEditTask,handleDeleteTask,handleEditProject,handleDeleteProject,handleSaveDraft,handleDeleteDraft}}>
+        <ProjectContext.Provider
+          value={{
+            addProject,
+            editProject,
+            deleteProject,
+            addTask,
+            editTask,
+            deleteTask,
+            addDraft,
+            deleteDraft,
+            saveDraft,
+          }}
+        >
           <TaskContainer selectedProject={selectedProject} />
           <ProjectsLists
             projects={projects}
             selectedProject={selectedProject}
-            onProjectSelect={changeSelectedProject}
+            onProjectSelect={(id) =>
+              setSelectedProject(projects.find((project) => project.id === id))
+            }
           />
-        
-        <DraftsSidebar
-          drafts={drafts}
-          isOpen={isDraftSidebarOpen}
-          onClose={handleToggleDraftSidebar}
-          projects={projects}
-        />
+          <DraftsSidebar
+            drafts={drafts}
+            isOpen={isDraftSidebarOpen}
+            onClose={toggleDraftSidebar}
+            projects={projects}
+          />
         </ProjectContext.Provider>
       </section>
     </div>
   );
 }
-
-// Initial state for projects
-// const getInitialProjects = () => [
-//   {
-//     id: 1,
-//     name: 'Project A',
-//     description: 'A project focused on developing a user-friendly e-commerce platform.',
-//     tasks: [
-//       { id: 1, title: 'Task A1', description: 'Design homepage layout.' },
-//       { id: 2, title: 'Task A2', description: 'Implement search functionality.' }
-//     ]
-//   },
-//   {
-//     id: 2,
-//     name: 'Project B',
-//     description: 'An internal project for building a project management tool.',
-//     tasks: [
-//       { id: 3, title: 'Task B1', description: 'Set up database schema.' }
-//     ]
-//   },
-//   {
-//     id: 3,
-//     name: 'Project C',
-//     description: 'A mobile application for real-time weather updates.',
-//     tasks: []
-//   }
-// ];
 
 export default App;

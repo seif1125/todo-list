@@ -1,34 +1,36 @@
-import React, { useState, useRef,useContext, useEffect } from 'react';
-import { ProjectContext } from './App';
-const ProjectItem = ({ project, isSelected,onSelect}) => {
+import React, { useState, useRef, useContext, useEffect } from "react";
+import { ProjectContext } from "../contexts/ProjectContext";
+
+const ProjectItem = ({ project, isSelected, onSelect }) => {
   const [editMode, setEditMode] = useState(false);
   const [projectName, setProjectName] = useState(project.name);
   const [projectDescription, setProjectDescription] = useState(project.description);
   const inputRef = useRef(null);
-  const {handleEditProject,handleDeleteProject} = useContext(ProjectContext);
+  const { editProject, deleteProject } = useContext(ProjectContext);
 
-
-  useEffect(()=>{
+  useEffect(() => {
     if (editMode && inputRef.current) {
       inputRef.current.focus();
     }
-  },[editMode])
-  
+  }, [editMode]);
+
   const handleClick = (e) => {
     e.stopPropagation();
     onSelect(project.id);
   };
 
-  const handleEdit = (e) => {
+  const enableEditMode = (e) => {
     e.stopPropagation();
     setEditMode(true);
-    
   };
 
-  const handleSave = (e) => {
+  const saveChanges = (e) => {
     e.stopPropagation();
-    if (projectName.trim() && (projectName !== project.name || projectDescription !== project.description)) {
-      handleEditProject({
+    if (
+      projectName.trim() &&
+      (projectName !== project.name || projectDescription !== project.description)
+    ) {
+      editProject({
         ...project,
         name: projectName.trim(),
         description: projectDescription.trim(),
@@ -37,10 +39,13 @@ const ProjectItem = ({ project, isSelected,onSelect}) => {
     setEditMode(false);
   };
 
-
+  const handleDeleteProject = (e) => {
+    e.stopPropagation();
+    deleteProject(project.id);
+  };
 
   return (
-    <li className={`project-item ${isSelected ? 'selected' : ''}`}>
+    <li className={`project-item ${isSelected ? "selected" : ""}`}>
       <div className="project-header" onClick={handleClick}>
         {editMode ? (
           <input
@@ -56,36 +61,27 @@ const ProjectItem = ({ project, isSelected,onSelect}) => {
         )}
 
         <div className="project-actions">
-          
-          {isSelected && (!editMode) &&(
+          {isSelected && !editMode && (
             <>
-              
-             
-                <span className="edit-button" onClick={handleEdit}>
-                  Edit
-                </span>
-              
-              <span
-                className="delete-button"
-                onClick={
-                 
-                  ()=>{handleDeleteProject(project.id);}
-                }
-              >
+              <button className="edit-button" onClick={enableEditMode}>
+                Edit
+              </button>
+              <button className="delete-button" onClick={handleDeleteProject}>
                 Delete
-              </span>
+              </button>
             </>
           )}
-        { !editMode&&<span className="tasks-count">{project?.tasks?.length ?? '--'} task(s)</span>}
-            { editMode&&<span className="save-project-button" onClick={handleSave}>
-                  Save
-          </span>}
+          {!editMode && <span className="tasks-count">{project?.tasks?.length ?? "0"} task(s)</span>}
+          {editMode && (
+            <button className="save-project-button" onClick={saveChanges}>
+              Save
+            </button>
+          )}
           <div>
-            <span className={`arrow-icon ${isSelected ? 'opened-project' : ''}`}>▼</span>
+            <span className={`arrow-icon ${isSelected ? "opened-project" : ""}`}>
+              {isSelected ? "▼" : "▶"}
+            </span>
           </div>
-         
-       
-         
         </div>
       </div>
 
@@ -100,7 +96,7 @@ const ProjectItem = ({ project, isSelected,onSelect}) => {
               rows="3"
             ></textarea>
           ) : (
-            <p>{project.description || 'No description available'}</p>
+            <p>{project.description || "No description available"}</p>
           )}
         </div>
       )}
