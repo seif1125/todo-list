@@ -1,4 +1,8 @@
 /* Global Styles */
+.app{
+overflow-x: hidden;
+}
+
 body {
   font-family: 'Arial', sans-serif;
   background-color: #f4f4f4;
@@ -73,6 +77,12 @@ h1{
 .notification-actions {
   display: flex;
   align-items: center;
+}
+.tasks-container {
+  width: 40%;
+}
+h2.project-title {
+  margin-top: 15px;
 }
 
 .view-draft-btn {
@@ -164,8 +174,12 @@ h1{
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  height: 360px;
+  overflow-y: scroll;
 }
-
+p.task-list-empty {
+  height: 360px;
+}
 .task-item {
   background-color: transparent;
   padding: 12px 10px;
@@ -216,6 +230,8 @@ h1{
   color: #ffcc00;
   cursor: pointer;
 }
+
+
 .complete-toggle {
   display: flex;
   align-items: center;
@@ -307,6 +323,8 @@ h1{
   list-style-type: none;
   padding: 0;
   margin-top: 15px;
+  height: 360px;
+  overflow-y: scroll;
 }
 
 .project-item {
@@ -375,9 +393,17 @@ span.arrow-icon {
   border: none !important;
 }
 
+.edit-button{
+  background: none;
+  border: none;
+  cursor: pointer;
+
+}
+
 .edit-button:hover, .delete-button:hover {
   transform: translateX(2px);
 }
+
 
 .project-header > input[type="text"] {
   background: none;
@@ -399,7 +425,7 @@ form.add-project-form {
   flex-direction: column;
   gap: 10px;
 }
-.add-project-form > input[type="text"] {
+.form-group > input[type="text"] {
   padding: 8px 12px;
   border-radius: 5px;
   border: #ffcc00 solid 0.25px;
@@ -412,7 +438,7 @@ form.add-project-form {
   outline: none;
   transition: border-color 0.3s;
 }
-.add-project-form >textarea {
+.form-group >textarea {
   margin-block: 5px;
   padding: 8px 12px;
   width: 100%;
@@ -475,7 +501,7 @@ form.add-project-form {
 }
 
 .save-button,
-.delete-button {
+.delete-button{
   background: none;
   border: 1px solid #ccc;
   padding: 5px 10px;
@@ -486,4 +512,112 @@ form.add-project-form {
 
 .flex-class{
   display: flex;
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+
+  .main-section {
+    flex-direction: column; /* Stack containers vertically */
+  }
+
+  .container,
+  .tasks-container,
+  .projects-sidebar {
+    width: 100%; /* Full width for all main components */
+    margin-bottom: 20px; /* Add spacing between sections */
+  }
+
+  .projects-sidebar {
+    min-width: unset;
+    box-shadow: none;
+    padding: 10px;
+    margin-top: 25px;
+  }
+
+  .drafts-sidebar {
+    width: 100%;
+    right: 100%; /* Remove the off-screen positioning */
+  }
+
+  .task-list {
+    min-height: 200px; /* Adjust for smaller screens */
+  }
+
+  .task-item {
+    flex-direction: column; /* Stack task item content */
+    align-items: flex-start;
+  }
+
+  .task-bar {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .complete-toggle > input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+  }
+
+  .add-task-form {
+    padding: 10px;
+  }
+
+  .add-task-form input[type="text"],
+  .add-task-form textarea {
+    font-size: 14px;
+  }
+
+  .add-task-form button {
+    font-size: 14px;
+  }
+
+  .projects-sidebar .project-header {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .project-header > input[type="text"],
+  .project-description > textarea {
+    font-size: 14px;
+  }
+  .opened {
+    right: 0px !important;
+}
+}
+
+/* Adjustments for Very Small Screens (up to 480px) */
+@media (max-width: 480px) {
+  .notification-bar {
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .project-item {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .add-project-form {
+    gap: 5px;
+  }
+
+  .add-project-form button {
+    font-size: 12px;
+  }
+
+  .task-item {
+    padding: 8px;
+  }
+
+  .task-bar > input {
+    font-size: 14px;
+  }
+
+  .tasks-container {
+    padding: 10px;
+  }
 }
