@@ -81,7 +81,7 @@ function App() {
             saveDraft,
           }}
         >
-          <TaskContainer selectedProject={selectedProject} />
+          <TaskContainer projects={projects} selectedProject={selectedProject} />
           <ProjectsLists
             projects={projects}
             selectedProject={selectedProject}

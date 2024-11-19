@@ -2,14 +2,14 @@ import React from "react";
 import AddTask from "./AddTask";
 import TasksList from "./TasksList";
 
-const TasksContainer = ({ selectedProject }) => {
+const TasksContainer = ({ selectedProject,projects }) => {
   return (
     <div className="tasks-container">
       <h2 className="project-title">
-        {selectedProject?.name || "Untitled Project"}
+        {selectedProject?.name || ""}
       </h2>
       <TasksList tasks={selectedProject?.tasks} />
-      <AddTask selectedProject={selectedProject} />
+      {projects.length>0&&<AddTask selectedProject={selectedProject} />}
     </div>
   );
 };

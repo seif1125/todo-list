@@ -2,12 +2,12 @@ import React, { useState, useContext, useRef, useEffect } from "react";
 import { ProjectContext } from "../contexts/ProjectContext";
 
 const TaskItem = ({ task }) => {
-  const { handleEditTask, handleDeleteTask } = useContext(ProjectContext);
+  const {editTask, deleteTask } = useContext(ProjectContext);
   const [showDescription, setShowDescription] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [taskTitle, setTaskTitle] = useState(task.title);
   const [taskDescription, setTaskDescription] = useState(task.description);
-
+  
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -29,13 +29,14 @@ const TaskItem = ({ task }) => {
       trimmedDescription &&
       (trimmedTitle !== task.title || trimmedDescription !== task.description)
     ) {
-      handleEditTask({ ...task, title: trimmedTitle, description: trimmedDescription });
+      console.log('ss',{ ...task, title: trimmedTitle, description: trimmedDescription });
+      editTask({ ...task, title: trimmedTitle, description: trimmedDescription });
     }
     setEditMode(false);
   };
 
   const toggleCompletion = () =>
-    handleEditTask({ ...task, completed: !task.completed });
+    editTask({ ...task, completed: !task.completed });
 
   return (
     <div className="task-item">
@@ -55,12 +56,13 @@ const TaskItem = ({ task }) => {
 
         <div className="task-actions">
           {showDescription && !editMode && (
-            <div className="complete-toggle">
+            <div className=" complete-toggle">
               <span className={task.completed ? "completed" : ""}>
                 {task.completed ? "Completed" : "In Progress"}
               </span>
               <input
                 type="checkbox"
+                className=""
                 checked={task.completed}
                 onChange={toggleCompletion}
               />
@@ -69,16 +71,17 @@ const TaskItem = ({ task }) => {
 
           {!editMode ? (
             <>
-              <button onClick={enterEditMode} aria-label="Edit Task">
+              <button  onClick={enterEditMode} aria-label="Edit Task" className="edit-task-button">
                 <EditIcon />
               </button>
               <button
-                onClick={() => handleDeleteTask(task.id)}
+                onClick={() => deleteTask(task.id)}
                 aria-label="Delete Task"
+                className="delete-task-button"
               >
                 <DeleteIcon />
               </button>
-              <button onClick={toggleDescription}>
+              <button className="task-item-toggle-description" onClick={toggleDescription}>
                 {showDescription ? "Hide Details" : "Show Details"}
               </button>
             </>

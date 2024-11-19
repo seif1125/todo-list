@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
 import { ProjectContext } from '../contexts/ProjectContext';
 
-const DraftsSidebar = ({ drafts, isOpen, onClose }) => {
+const DraftsSidebar = ({ drafts, isOpen, onClose ,projects}) => {
   const { saveDraft, deleteDraft } = useContext(ProjectContext);
 
-  const getProjectName = (projectId, projects) => {
-    const project = projects.find((proj) => proj.id === projectId);
-    return project ? project.name : 'Unknown Project';
+  const getProjectName = (draft) => {
+    const project = projects.find((proj) => proj.id === draft.projectId);
+    return project ? project.name : draft.projectName;
   };
 
   return (
@@ -23,12 +23,12 @@ const DraftsSidebar = ({ drafts, isOpen, onClose }) => {
             <li key={draft.id} className="draft-item">
               <h4>{draft.title}</h4>
               <p>
-                <strong>Project:</strong> {getProjectName||drafts.project}
+                <strong>Project:</strong> {getProjectName(draft)}
               </p>
               <p>{draft.description}</p>
               <div className="draft-actions">
                 <button
-                  onClick={() => saveDraft(draft.id)}
+                  onClick={() => saveDraft(draft)}
                   className="save-button"
                 >
                   Save

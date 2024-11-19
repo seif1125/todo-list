@@ -1,8 +1,13 @@
-import React, { useState, useRef, useContext, useEffect } from "react";
+import React, { useState, useRef, useEffect,useContext} from "react";
 import { ProjectContext } from "../contexts/ProjectContext";
 
-const ProjectItem = ({ project, isSelected, onSelect }) => {
-  const [editMode, setEditMode] = useState(false);
+const ProjectItem = ({
+  project,
+  isSelected,
+  onSelect,
+  editMode,
+  onEditModeChange,
+}) => {
   const [projectName, setProjectName] = useState(project.name);
   const [projectDescription, setProjectDescription] = useState(project.description);
   const inputRef = useRef(null);
@@ -21,7 +26,7 @@ const ProjectItem = ({ project, isSelected, onSelect }) => {
 
   const enableEditMode = (e) => {
     e.stopPropagation();
-    setEditMode(true);
+    onEditModeChange(project.id, true);
   };
 
   const saveChanges = (e) => {
@@ -36,7 +41,7 @@ const ProjectItem = ({ project, isSelected, onSelect }) => {
         description: projectDescription.trim(),
       });
     }
-    setEditMode(false);
+    onEditModeChange(project.id, false); // Exit edit mode
   };
 
   const handleDeleteProject = (e) => {
@@ -72,7 +77,7 @@ const ProjectItem = ({ project, isSelected, onSelect }) => {
             </>
           )}
           {!editMode && <span className="tasks-count">{project?.tasks?.length ?? "0"} task(s)</span>}
-          {editMode && (
+          {editMode && isSelected && (
             <button className="save-project-button" onClick={saveChanges}>
               Save
             </button>
