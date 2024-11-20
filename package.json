@@ -2,8 +2,7 @@
   "name": "todo-list",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://seif1125.github.io/todo-list",
-
+  "homepage": "https://seif1125.github.io/todo-list",
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
