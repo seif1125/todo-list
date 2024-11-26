@@ -1,4 +1,4 @@
-#TODO List Application  
+<h1><strong>TODO List Application</strong></h1>  
 <img src="https://github.com/user-attachments/assets/792e568d-8b53-4c75-9ad2-b0ff5f9c3882" alt="Example Image" width="100" height="100"> 
 
 
